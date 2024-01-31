@@ -1,0 +1,39 @@
+{
+    "containerDefinitions": [ 
+       { 
+          "essential": true,
+          "image": "252850564008.dkr.ecr.us-east-1.amazonaws.com/loyaltyusers:%BUILD_TAG%",
+          "logConfiguration": { 
+             "logDriver": "awslogs",
+             "options": { 
+                "awslogs-group" : "/ecs/loyaltyusers",
+                "awslogs-region": "us-east-1",
+                "awslogs-stream-prefix": "ecs"
+             }
+          },
+          "name": "loyaltyusers",
+          "portMappings": [ 
+             { 
+                "containerPort": 5000,
+                "hostPort": 5000,
+                "protocol": "tcp"
+             }
+          ],
+          "environment": [
+            {
+              "name": "SPRING_PROFILES_ACTIVE",
+              "value": "%BUILD_ENV_VAR%"
+            }
+            ]
+       }
+    ],
+    "cpu": "512",
+    "executionRoleArn": "arn:aws:iam::252850564008:role/ecsTaskExecutionRole",
+    "taskRoleArn": "arn:aws:iam::252850564008:role/ECSrole",
+    "family": "loyaltyusers",
+    "memory": "1024",
+    "networkMode": "awsvpc",
+    "requiresCompatibilities": [ 
+        "FARGATE" 
+     ]
+ }

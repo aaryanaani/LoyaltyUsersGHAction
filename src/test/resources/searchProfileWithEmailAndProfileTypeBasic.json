@@ -1,0 +1,128 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "status": {
+      "type": "string"
+    },
+    "user": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "external_id": {
+          "type": "string"
+        },
+        "opted_in": {
+          "type": "boolean"
+        },
+        "activated": {
+          "type": "boolean"
+        },
+        "proxy_ids": {
+          "type": "array",
+          "items": {}
+        },
+        "available_points": {
+          "type": "number"
+        },
+        "test_points": {
+          "type": "number"
+        },
+        "unclaimed_achievement_count": {
+          "type": "number"
+        },
+        "email": {
+          "type": "string"
+        },
+        "created_at": {
+          "type": "string"
+        },
+        "updated_at": {
+          "type": "string"
+        },
+        "city": {
+          "type": "string"
+        },
+        "zip": {
+          "type": "string"
+        },
+        "dma": {
+          "type": "string"
+        },
+        "country": {
+          "type": "string"
+        },
+        "suspended": {
+          "type": "boolean"
+        },
+        "last_name": {
+          "type": "string"
+        },
+        "first_name": {
+          "type": "string"
+        },
+        "registered_at": {
+          "type": "string"
+        },
+        "profile_photo_url": {
+          "type": "string"
+        },
+        "test_account": {
+          "type": "boolean"
+        },
+        "account_status": {
+          "type": "string"
+        },
+        "tier": {
+          "type": "string"
+        },
+        "tier_system": {
+          "type": "string"
+        },
+        "tier_points": {
+          "type": "number"
+        },
+        "next_tier_points": {
+          "type": "number"
+        },
+        "tier_ends_value": {
+          "type": "number"
+        },
+        "tier_entered_at": {
+          "type": "string"
+        },
+        "tier_resets_at": {
+          "type": "string"
+        },
+        "referrer_code": {
+          "type": "string"
+        },
+        "phone_numbers": {
+          "type": "array",
+          "items": [
+            {
+              "type": "object",
+              "properties": {
+                "phone_number": {
+                  "type": "string"
+                },
+                "phone_type": {
+                  "type": "string"
+                },
+                "preference_flags": {
+                  "type": "array",
+                  "items": {}
+                },
+                "verified_ownership": {
+                  "type": "boolean"
+                }
+              }
+            }
+          ]
+        }
+      }
+    }
+  }
+}

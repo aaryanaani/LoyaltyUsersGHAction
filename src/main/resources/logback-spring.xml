@@ -1,0 +1,300 @@
+<configuration>
+<appender name="logToRollingFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>logs/loyalty_users.log</file>
+    <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+      <fileNamePattern>logs/loyalty_users-%d{MM-dd-yyyy}-%i.log.gz</fileNamePattern>
+      <minIndex>1</minIndex>
+      <maxIndex>10</maxIndex>
+    </rollingPolicy>
+
+    <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+      <maxFileSize>10MB</maxFileSize>
+    </triggeringPolicy>
+    <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+            <layout class="com.skechers.loyalty.users.logging.FullMaskingPatternLayout">
+                <maskPattern>firstName=(.*?)[,)]</maskPattern> <!-- First name pattern -->
+                <maskPattern>first_name=(.*?)[,)]</maskPattern> <!-- First name pattern -->
+                <maskPattern>full_name=(.*?)[,)]</maskPattern> <!-- full name pattern -->
+                <maskPattern>lastName=(.*?)[,)]</maskPattern> <!-- Last name pattern -->
+                <maskPattern>last_name=(.*?)[,)]</maskPattern> <!-- Last name pattern -->
+                <maskPattern>email=(.*?)[,)]</maskPattern> <!-- email pattern -->
+                <maskPattern>emailaddress=(.*?)[,)]</maskPattern> <!-- email pattern -->
+                <maskPattern>email_address=(.*?)[,)]</maskPattern> <!-- email pattern -->
+                <maskPattern>[\w-\.]+@([\w-]+\.)+[\w-]{2,4}</maskPattern> <!-- stand alone email pattern -->
+                <maskPattern>city=(.*?)[,)]</maskPattern> <!-- city pattern -->
+                <maskPattern>country=(.*?)[,)]</maskPattern> <!-- country pattern -->
+                <maskPattern>phoneNumber=(.*?)[,)]</maskPattern> <!-- phone number pattern -->
+                <maskPattern>address=(.*?)[,)]</maskPattern> <!-- address pattern -->
+                <maskPattern>dob=(.*?)[,)]</maskPattern> <!-- dob pattern -->
+                <maskPattern>subscriberkey=(.*?)[,)]</maskPattern> <!-- subscriberkey pattern -->
+                <maskPattern>subscriber_key=(.*?)[,)]</maskPattern> <!-- subscriberkey pattern -->
+                <maskPattern>\"firstname\"\s*:\s*\"(.*?)\"</maskPattern> <!-- First name JSON pattern -->
+                <maskPattern>\"first_name\"\s*:\s*\"(.*?)\"</maskPattern> <!-- First name JSON pattern -->
+                <maskPattern>\"fullname\"\s*:\s*\"(.*?)\"</maskPattern> <!-- full name JSON pattern -->
+                <maskPattern>\"full_name\"\s*:\s*\"(.*?)\"</maskPattern> <!-- full name JSON pattern -->
+                <maskPattern>\"lastname\"\s*:\s*\"(.*?)\"</maskPattern> <!-- Last name JSON pattern -->
+                <maskPattern>\"last_name\"\s*:\s*\"(.*?)\"</maskPattern> <!-- Last name JSON pattern -->
+                <maskPattern>\"email\"\s*:\s*\"(.*?)\"</maskPattern> <!-- email JSON pattern -->
+                <maskPattern>\"email_address\"\s*:\s*\"(.*?)\"</maskPattern> <!-- email JSON pattern -->
+                <maskPattern>\"emailaddress\"\s*:\s*\"(.*?)\"</maskPattern> <!-- email JSON pattern -->
+                <maskPattern>\"city\"\s*:\s*\"(.*?)\"</maskPattern> <!-- city JSON pattern -->
+                <maskPattern>\"country\"\s*:\s*\"(.*?)\"</maskPattern> <!-- country JSON pattern -->
+                <maskPattern>\"phone_number\"\s*:\s*\"(.*?)\"</maskPattern> <!-- phone number JSON pattern -->
+                <maskPattern>\"address\"\s*:\s*\"(.*?)\"</maskPattern> <!-- address JSON pattern -->
+                <maskPattern>\"dob\"\s*:\s*\"(.*?)\"</maskPattern> <!-- dob JSON pattern -->
+                <maskPattern>\"customerName\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"address1\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"address2\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"firstName\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"lastName\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"fullName\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"phone\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"expirationMonth\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"expirationYear\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"holder\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"creditCardToken\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"paymentInstrumentId\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"couponCode\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"offerId\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"offerName\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"oldPaymentInstrumentId\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"number\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"givexCardNumber\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"givexCardPin\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"customerId\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"customerNo\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"afterPayToken\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"cardDetails\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"token\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"masterId\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"transactionIdentifier\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"billing_fname\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"billing_lname\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"billing_address1\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"billing_phone\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"shipping_fname\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"shipping_lname\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"shipping_address1\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"shipping_address2\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"shipping_phone\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"item_shipping_fname\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"item_shipping_lname\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"billing_address2\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"item_shipping_address1\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"item_shipping_address2\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"item_shipping_phone\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"subscriberkey\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"subscriber_key\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"phoneMobile\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"phoneHome\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"phone_home\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"ContactKey\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"address_id\"\s*:\s*\"(.*?)\"</maskPattern>               
+                <pattern>"[%-5level][%X{aProfile}]%X{countryCode}- %X{userId}- %X{traceId} : %c{1} %M - %msg%n"</pattern>
+            </layout>
+        </encoder>
+</appender>
+<appender name="infomask" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+            <layout class="com.skechers.loyalty.users.logging.FullMaskingPatternLayout">
+                 <maskPattern>firstName=(.*?)[,)]</maskPattern> <!-- First name pattern -->
+                <maskPattern>first_name=(.*?)[,)]</maskPattern> <!-- First name pattern -->
+                <maskPattern>full_name=(.*?)[,)]</maskPattern> <!-- full name pattern -->
+                <maskPattern>lastName=(.*?)[,)]</maskPattern> <!-- Last name pattern -->
+                <maskPattern>last_name=(.*?)[,)]</maskPattern> <!-- Last name pattern -->
+                <maskPattern>email=(.*?)[,)]</maskPattern> <!-- email pattern -->
+                <maskPattern>emailaddress=(.*?)[,)]</maskPattern> <!-- email pattern -->
+                <maskPattern>email_address=(.*?)[,)]</maskPattern> <!-- email pattern -->
+                <maskPattern>[\w-\.]+@([\w-]+\.)+[\w-]{2,4}</maskPattern> <!-- stand alone email pattern -->
+                <maskPattern>city=(.*?)[,)]</maskPattern> <!-- city pattern -->
+                <maskPattern>country=(.*?)[,)]</maskPattern> <!-- country pattern -->
+                <maskPattern>phoneNumber=(.*?)[,)]</maskPattern> <!-- phone number pattern -->
+                <maskPattern>address=(.*?)[,)]</maskPattern> <!-- address pattern -->
+                <maskPattern>dob=(.*?)[,)]</maskPattern> <!-- dob pattern -->
+                <maskPattern>subscriberkey=(.*?)[,)]</maskPattern> <!-- subscriberkey pattern -->
+                <maskPattern>subscriber_key=(.*?)[,)]</maskPattern> <!-- subscriberkey pattern -->
+                <maskPattern>\"firstname\"\s*:\s*\"(.*?)\"</maskPattern> <!-- First name JSON pattern -->
+                <maskPattern>\"first_name\"\s*:\s*\"(.*?)\"</maskPattern> <!-- First name JSON pattern -->
+                <maskPattern>\"fullname\"\s*:\s*\"(.*?)\"</maskPattern> <!-- full name JSON pattern -->
+                <maskPattern>\"full_name\"\s*:\s*\"(.*?)\"</maskPattern> <!-- full name JSON pattern -->
+                <maskPattern>\"lastname\"\s*:\s*\"(.*?)\"</maskPattern> <!-- Last name JSON pattern -->
+                <maskPattern>\"last_name\"\s*:\s*\"(.*?)\"</maskPattern> <!-- Last name JSON pattern -->
+                <maskPattern>\"email\"\s*:\s*\"(.*?)\"</maskPattern> <!-- email JSON pattern -->
+                <maskPattern>\"email_address\"\s*:\s*\"(.*?)\"</maskPattern> <!-- email JSON pattern -->
+                <maskPattern>\"emailaddress\"\s*:\s*\"(.*?)\"</maskPattern> <!-- email JSON pattern -->
+                <maskPattern>\"city\"\s*:\s*\"(.*?)\"</maskPattern> <!-- city JSON pattern -->
+                <maskPattern>\"country\"\s*:\s*\"(.*?)\"</maskPattern> <!-- country JSON pattern -->
+                <maskPattern>\"phone_number\"\s*:\s*\"(.*?)\"</maskPattern> <!-- phone number JSON pattern -->
+                <maskPattern>\"address\"\s*:\s*\"(.*?)\"</maskPattern> <!-- address JSON pattern -->
+                <maskPattern>\"dob\"\s*:\s*\"(.*?)\"</maskPattern> <!-- dob JSON pattern -->
+                <maskPattern>\"customerName\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"address1\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"address2\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"firstName\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"lastName\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"fullName\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"phone\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"expirationMonth\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"expirationYear\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"holder\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"creditCardToken\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"paymentInstrumentId\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"couponCode\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"offerId\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"offerName\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"oldPaymentInstrumentId\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"number\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"givexCardNumber\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"givexCardPin\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"customerId\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"customerNo\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"afterPayToken\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"cardDetails\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"token\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"masterId\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"transactionIdentifier\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"billing_fname\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"billing_lname\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"billing_address1\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"billing_phone\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"shipping_fname\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"shipping_lname\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"shipping_address1\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"shipping_address2\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"shipping_phone\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"item_shipping_fname\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"item_shipping_lname\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"billing_address2\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"item_shipping_address1\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"item_shipping_address2\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"item_shipping_phone\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"subscriberkey\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"subscriber_key\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"phoneMobile\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"phoneHome\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"phone_home\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"ContactKey\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"address_id\"\s*:\s*\"(.*?)\"</maskPattern>                
+                <pattern>[%-5level][%X{aProfile}][%X{countryCode}]-[%X{locale}]-[%X{userId}] %X{traceId:-}--%c{0} %M - %m%n%rootException</pattern>
+            </layout>
+        </encoder>
+    </appender>
+    
+    <appender name="debugmask" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+            <layout class="com.skechers.loyalty.users.logging.SemiMaskingPatternLayout">
+                 <maskPattern>firstName=(.*?)[,)]</maskPattern> <!-- First name pattern -->
+                <maskPattern>first_name=(.*?)[,)]</maskPattern> <!-- First name pattern -->
+                <maskPattern>full_name=(.*?)[,)]</maskPattern> <!-- full name pattern -->
+                <maskPattern>lastName=(.*?)[,)]</maskPattern> <!-- Last name pattern -->
+                <maskPattern>last_name=(.*?)[,)]</maskPattern> <!-- Last name pattern -->
+                <maskPattern>email=(.*?)[,)]</maskPattern> <!-- email pattern -->
+                <maskPattern>emailaddress=(.*?)[,)]</maskPattern> <!-- email pattern -->
+                <maskPattern>email_address=(.*?)[,)]</maskPattern> <!-- email pattern -->
+                <maskPattern>[\w-\.]+@([\w-]+\.)+[\w-]{2,4}</maskPattern> <!-- stand alone email pattern -->
+                <maskPattern>city=(.*?)[,)]</maskPattern> <!-- city pattern -->
+                <maskPattern>country=(.*?)[,)]</maskPattern> <!-- country pattern -->
+                <maskPattern>phoneNumber=(.*?)[,)]</maskPattern> <!-- phone number pattern -->
+                <maskPattern>address=(.*?)[,)]</maskPattern> <!-- address pattern -->
+                <maskPattern>dob=(.*?)[,)]</maskPattern> <!-- dob pattern -->
+                <maskPattern>subscriberkey=(.*?)[,)]</maskPattern> <!-- subscriberkey pattern -->
+                <maskPattern>subscriber_key=(.*?)[,)]</maskPattern> <!-- subscriberkey pattern -->
+                <maskPattern>\"firstname\"\s*:\s*\"(.*?)\"</maskPattern> <!-- First name JSON pattern -->
+                <maskPattern>\"first_name\"\s*:\s*\"(.*?)\"</maskPattern> <!-- First name JSON pattern -->
+                <maskPattern>\"fullname\"\s*:\s*\"(.*?)\"</maskPattern> <!-- full name JSON pattern -->
+                <maskPattern>\"full_name\"\s*:\s*\"(.*?)\"</maskPattern> <!-- full name JSON pattern -->
+                <maskPattern>\"lastname\"\s*:\s*\"(.*?)\"</maskPattern> <!-- Last name JSON pattern -->
+                <maskPattern>\"last_name\"\s*:\s*\"(.*?)\"</maskPattern> <!-- Last name JSON pattern -->
+                <maskPattern>\"email\"\s*:\s*\"(.*?)\"</maskPattern> <!-- email JSON pattern -->
+                <maskPattern>\"email_address\"\s*:\s*\"(.*?)\"</maskPattern> <!-- email JSON pattern -->
+                <maskPattern>\"emailaddress\"\s*:\s*\"(.*?)\"</maskPattern> <!-- email JSON pattern -->
+                <maskPattern>\"city\"\s*:\s*\"(.*?)\"</maskPattern> <!-- city JSON pattern -->
+                <maskPattern>\"country\"\s*:\s*\"(.*?)\"</maskPattern> <!-- country JSON pattern -->
+                <maskPattern>\"phone_number\"\s*:\s*\"(.*?)\"</maskPattern> <!-- phone number JSON pattern -->
+                <maskPattern>\"address\"\s*:\s*\"(.*?)\"</maskPattern> <!-- address JSON pattern -->
+                <maskPattern>\"dob\"\s*:\s*\"(.*?)\"</maskPattern> <!-- dob JSON pattern -->
+                <maskPattern>\"customerName\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"address1\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"address2\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"firstName\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"lastName\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"fullName\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"phone\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"expirationMonth\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"expirationYear\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"holder\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"creditCardToken\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"paymentInstrumentId\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"couponCode\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"offerId\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"offerName\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"oldPaymentInstrumentId\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"number\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"givexCardNumber\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"givexCardPin\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"customerId\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"customerNo\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"afterPayToken\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"cardDetails\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"token\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"masterId\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"transactionIdentifier\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"billing_fname\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"billing_lname\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"billing_address1\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"billing_phone\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"shipping_fname\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"shipping_lname\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"shipping_address1\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"shipping_address2\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"shipping_phone\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"item_shipping_fname\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"item_shipping_lname\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"billing_address2\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"item_shipping_address1\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"item_shipping_address2\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"item_shipping_phone\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"subscriberkey\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"subscriber_key\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"phoneMobile\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"phoneHome\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"phone_home\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"ContactKey\"\s*:\s*\"(.*?)\"</maskPattern>
+                <maskPattern>\"address_id\"\s*:\s*\"(.*?)\"</maskPattern>                
+                <pattern>[%-5level][%X{aProfile}][%X{countryCode}]-[%X{locale}]-[%X{userId}] %X{traceId:-}--%c{0} %M - %m%n%rootException</pattern>
+            </layout>
+        </encoder>
+    </appender>
+    
+    <logger name="io.netty.util" level="ERROR"/>
+    <logger name="reactor.netty.http.client" level="ERROR"/>
+    <logger name="reactor.netty.resources.PooledConnectionProvider" level="ERROR"/>
+    <logger name="reactor.netty.tcp.SslProvider" level="ERROR"/>
+    <logger name="reactor.netty.channel.BootstrapHandlers" level="ERROR"/>
+    <logger name="io.netty.buffer.PooledByteBufAllocator" level="ERROR"/>
+    <logger name="io.netty.buffer.ByteBufUtil" level="ERROR"/>
+    <logger name="io.netty.handler.ssl.SslHandler" level="ERROR"/>   
+    <logger name="io.netty.handler.ssl.OpenSsl" level="ERROR"/>
+    <logger name="io.netty.handler.ssl.JdkSslContext" level="ERROR"/>
+    <logger name="io.netty.channel.nio.NioEventLoop" level="ERROR"/>
+    <logger name="com.zaxxer.hikari.pool.HikariPool" level="ERROR"/>
+    <logger name="com.amazonaws.internal.InstanceMetadataServiceResourceFetcher" level="ERROR"/>
+    <logger name="com.amazonaws.util.EC2MetadataUtils" level="ERROR"/>
+    
+    <springProfile name="prod">
+    <root level="INFO">
+      <appender-ref ref="infomask" />
+      <appender-ref ref="logToRollingFile" />
+    </root>
+  </springProfile>
+  
+   <springProfile name="!prod">
+    <root level="INFO">
+      <appender-ref ref="debugmask" />
+      <appender-ref ref="logToRollingFile" />
+    </root>
+    <logger name="com.skechers" level="DEBUG"/>
+    <logger name="org.springframework.web.filter.CommonsRequestLoggingFilter" level="DEBUG"/>
+  </springProfile>
+
+</configuration>

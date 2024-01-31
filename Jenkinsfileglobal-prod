@@ -1,0 +1,268 @@
+#!/usr/bin/groovy
+
+@Library('sketcher-shared-library') _  // Import Jenkins Global Library
+import java.text.SimpleDateFormat
+
+def dateFormat = new SimpleDateFormat("yyyy-MM-dd-HH-mm-SSS")
+def relDate = dateFormat.format(new Date())
+
+pipeline {
+  agent any
+
+  environment {
+    service_name             = "loyaltyusers"	
+    app_version              = readFile('version.txt').trim()
+    build_id                 = "${BUILD_NUMBER}-${relDate}" // Jenkins build ID
+    dev_version              = "${app_version}.${build_id}"
+    release_version          = "${app_version}.r${build_id}"
+    docker_context           = "${WORKSPACE}"
+    build_notify             = "xcijv-pkdev@prokarma.com"
+    PATH = "/var/lib/cloudbees-jenkins-distribution/.local/bin/:$PATH"
+    scannerHome = tool 'SonarQube Scanner 4.7'
+    SONAR_HOST_URL = 'https://sonarqube.skechers.com/sonarqube'
+    JAVA_HOME = '/usr/lib/jvm/java-11-openjdk-11.0.17.0.8-2.el7_9.x86_64'    
+  }
+  
+  // START THE PIPELINE
+  
+  stages {
+    // All branches get built and scaned
+  
+    stage ('Build & Scan') {
+      steps {
+          script {            
+               sh "chmod +x gradlew"
+               sh "./gradlew -Plabel=${release_version} clean labelBuild build"
+			   junit allowEmptyResults: true, testResults: '**/build/test-results/**/TEST-*'
+          } 
+      }
+    }
+	stage ('SonarQube Analysis') {
+		steps {		  
+			withSonarQubeEnv ('Sonarqube-PROD') {		
+				echo "$SONAR_HOST_URL"
+               	echo "${env.SONAR_HOST_URL}"
+               	sh "${scannerHome}/bin/sonar-scanner -X -Dsonar.verbose=true -Dsonar.projectKey=LoyaltyUsers -Dsonar.projectName=LoyaltyUsers"+
+               	" -Dsonar.sourceEncoding=UTF-8 -Dsonar.java.sources=src/main/java -Dsonar.java.binaries=build"+
+               	" -Dsonar.junit.reportPaths=**/build/reports/jacoco/test  -Dsonar.coverage.exclusions=**src/test/**,**com/skechers/loyalty/**/*Application*,"+
+				"**com/skechers/loyalty/**/model/**,**com/skechers/loyalty/**/logging/**"
+               	sh 'echo "XXXXXXXX"' 	    
+            }		
+	  	}
+	}
+	
+    stage ('ShiftLeft Analysis') {
+        steps {
+            script {
+                sh '/usr/local/bin/sl check-analysis --v2  --app LoyaltyUsers --config shiftleft.yaml'            
+                sh '/usr/local/bin/sl analyze --tag app.teamname=Loyalty --vcs-prefix-correction "*=src/main/java" --remediation-config "sl-remidiation.yaml" --app LoyaltyUsers --java build/libs/LoyaltyUsers-0.0.1-SNAPSHOT.jar'            
+			}
+        }
+    }    
+    stage ('Create Image') {
+
+      environment {
+        region           	= "${aws_prod_emea_region}" 
+        aws_prod_account 	= credentials('aws_prod_account')
+        docker_repo      	= "${aws_prod_account}.dkr.ecr.${aws_prod_emea_region}.amazonaws.com"		
+        docker_url       	= "https://${aws_prod_account}.dkr.ecr.${aws_prod_emea_region}.amazonaws.com/loyaltyusers"			
+   
+      }                
+      steps {
+        script {
+          // Clean up
+         container.rmDanglingContainers()
+         container.rmDanglingImages()
+         container.rmDanglingVolumes()
+         withAWS(credentials: 'loyalty-dev', region: "${aws_prod_emea_region}") {		       
+          sh "aws ecr get-login --region ${region} --no-include-email > ecrlogin"
+          def command = readFile('ecrlogin').trim()
+          sh("${command}")
+          sh "docker build --rm --pull --no-cache -t ${service_name} ${docker_context}"		  
+          sh "docker tag ${service_name}:latest ${docker_repo}/${service_name}:${dev_version}"		  
+          sh "docker push ${docker_repo}/${service_name}:${dev_version}"		  
+		}
+        }
+      }
+    }
+    stage ('Deploy to EMEA') {
+				when{
+					expression {environment=='EMEA' || environment=='All'}
+					}
+	
+      environment {
+        region          	= "${aws_prod_emea_region}"
+	aws_prod_account        = credentials ('aws_prod_account')       
+        docker_repo     	= "${aws_prod_account}.dkr.ecr.${aws_prod_emea_region}.amazonaws.com"
+        docker_url      	= "https://${docker_repo}"
+        clusterName     	= "loyaltyglobalemea-prodCluster" // eks-dev xcijv-dev-eks-cluster-alpha
+        environment     	= "prod"     
+        taskFamily      	= "loyaltyusers-emea-prod"
+        serviceName     	= "loyaltyusers-emea-prod"
+	loyalty_region 		= "emea"
+        taskDefile  		= "file://task-definition-${dev_version}.json"
+      }
+      steps {
+        script {
+            input message: 'Do you want to approve the deploy in EMEA?'
+            withAWS(credentials: 'loyalty-dev', region: "${aws_prod_emea_region}") {           
+              
+			  sh  " sed -e  's;%BUILD_TAG%;${dev_version};g'  task-definition-input-global-emea.json > task-definition-${environment}.json"
+              
+			  sh  " sed -e  's;%BUILD_ENV_VAR%;${environment};g;s;%LOYALTY_REGION_ENV_VAR%;${loyalty_region};g;s;%REGION_ENV_VAR%;${region};g'  task-definition-${environment}.json > task-definition-${dev_version}.json"
+              
+			  // Get current [TaskDefinition#revision-number]
+              def currTaskDef = sh (returnStdout: true,script: "aws ecs describe-task-definition  --task-definition ${taskFamily} | egrep 'revision' | tr ',' ' ' | awk '{print \$2}'").trim()
+              // get Current task definition
+                       
+              if(currTaskDef) {
+                    sh  "aws ecs update-service  --cluster ${clusterName}  --service ${serviceName}  --task-definition ${taskFamily}:${currTaskDef} --desired-count 0"
+                }  
+
+              sh  " aws ecs register-task-definition  --family ${taskFamily} --cli-input-json ${taskDefile}"
+              def taskRevision = sh (returnStdout: true,script:  "aws ecs describe-task-definition --task-definition ${taskFamily} | egrep 'revision'   | tr ',' ' ' | awk '{print \$2}' ").trim()
+              // ECS update service to use the newly registered [TaskDefinition#revision]
+              sh  "aws ecs update-service  --cluster ${clusterName} --service ${serviceName} --task-definition ${taskFamily}:${taskRevision}  --desired-count 2 "
+      
+		 }
+        }
+       }
+     }
+	 
+       stage ('Deploy to EMEA-PROD-DR') {
+        when{
+          expression {environment=='EMEA' || environment=='All'}
+          }
+  
+      environment {
+        region            = "${aws_prod_emea_dr_region}"
+        aws_prod_account  = credentials ('aws_prod_account')       
+        docker_repo       = "${aws_prod_account}.dkr.ecr.${aws_prod_emea_dr_region}.amazonaws.com"
+        docker_url        = "https://${docker_repo}"
+        clusterName       = "loyaltyglobalemea-prod-drCluster" // eks-dev xcijv-dev-eks-cluster-alpha
+        environment       = "prod"     
+        taskFamily        = "loyaltyusers-emea-prod-dr"
+        serviceName       = "loyaltyusers-emea-prod-dr"
+        loyalty_region    = "emea"
+        taskDefile        = "file://task-definition-${dev_version}.json"
+      }
+      steps {
+        script {
+            //input message: 'Do you want to approve the deploy in EMEA-prod-dr?'
+            withAWS(credentials: 'loyalty-dev', region: "${aws_prod_emea_dr_region}") {           
+              
+        sh  " sed -e  's;%BUILD_TAG%;${dev_version};g'  task-definition-input-global-emea-prod-dr.json > task-definition-${environment}.json"
+              
+        sh  " sed -e  's;%BUILD_ENV_VAR%;${environment};g;s;%LOYALTY_REGION_ENV_VAR%;${loyalty_region};g;s;%REGION_ENV_VAR%;${region};g'  task-definition-${environment}.json > task-definition-${dev_version}.json"
+              
+        // Get current [TaskDefinition#revision-number]
+              def currTaskDef = sh (returnStdout: true,script: "aws ecs describe-task-definition  --task-definition ${taskFamily} | egrep 'revision' | tr ',' ' ' | awk '{print \$2}'").trim()
+              // get Current task definition
+                       
+              if(currTaskDef) {
+                    sh  "aws ecs update-service  --cluster ${clusterName}  --service ${serviceName}  --task-definition ${taskFamily}:${currTaskDef} --desired-count 0"
+                }  
+
+              sh  " aws ecs register-task-definition  --family ${taskFamily} --cli-input-json ${taskDefile}"
+              def taskRevision = sh (returnStdout: true,script:  "aws ecs describe-task-definition --task-definition ${taskFamily} | egrep 'revision'   | tr ',' ' ' | awk '{print \$2}' ").trim()
+              // ECS update service to use the newly registered [TaskDefinition#revision]
+              sh  "aws ecs update-service  --cluster ${clusterName} --service ${serviceName} --task-definition ${taskFamily}:${taskRevision}  --desired-count 2 "
+      
+     }
+        }
+       }
+     }
+    stage ('Deploy to NORA') {
+				when{
+					expression {environment=='NORA' || environment=='All'}
+					}			
+	
+      environment {
+        region          	= "${aws_prod_nora_region}"
+	aws_prod_account        = credentials ('aws_prod_account')       
+        docker_repo     	= "${aws_prod_account}.dkr.ecr.${aws_prod_nora_region}.amazonaws.com"
+        docker_url      	= "https://${docker_repo}"
+        clusterName     	= "loyaltyglobalProdCluster" // eks-dev xcijv-dev-eks-cluster-alpha
+        environment     	= "prod"     
+        taskFamily      	= "loyaltyusers-nora-prod"
+        serviceName     	= "loyaltyusers-nora-prod"
+	loyalty_region 		= "nora"
+        taskDefile  		= "file://task-definition-${dev_version}.json"
+      }
+      steps {
+        script {
+            input message: 'Do you want to approve the deploy in NORA?'
+            withAWS(credentials: 'loyalty-dev', region: "${aws_prod_nora_region}") {           
+              
+			  sh  " sed -e  's;%BUILD_TAG%;${dev_version};g'  task-definition-input-global-nora.json > task-definition-${environment}.json"
+              
+			  sh  " sed -e  's;%BUILD_ENV_VAR%;${environment};g;s;%LOYALTY_REGION_ENV_VAR%;${loyalty_region};g;s;%REGION_ENV_VAR%;${region};g'  task-definition-${environment}.json > task-definition-${dev_version}.json"
+              
+			  // Get current [TaskDefinition#revision-number]
+              def currTaskDef = sh (returnStdout: true,script: "aws ecs describe-task-definition  --task-definition ${taskFamily} | egrep 'revision' | tr ',' ' ' | awk '{print \$2}'").trim()
+              // get Current task definition
+                       
+              if(currTaskDef) {
+                    sh  "aws ecs update-service  --cluster ${clusterName}  --service ${serviceName}  --task-definition ${taskFamily}:${currTaskDef} --desired-count 0"
+                }  
+
+              sh  " aws ecs register-task-definition  --family ${taskFamily} --cli-input-json ${taskDefile}"
+              def taskRevision = sh (returnStdout: true,script:  "aws ecs describe-task-definition --task-definition ${taskFamily} | egrep 'revision'   | tr ',' ' ' | awk '{print \$2}' ").trim()
+              // ECS update service to use the newly registered [TaskDefinition#revision]
+              sh  "aws ecs update-service  --cluster ${clusterName} --service ${serviceName} --task-definition ${taskFamily}:${taskRevision}  --desired-count 2 "    
+		 }
+        }
+       }
+     }	
+
+    stage ('Deploy to NORA-PROD-DR') {
+        when{
+          expression {environment=='NORA' || environment=='All'}
+          }     
+  
+      environment {
+        region            = "${aws_prod_nora_dr_region}"
+        aws_prod_account  = credentials ('aws_prod_account')       
+        docker_repo       = "${aws_prod_account}.dkr.ecr.${aws_prod_nora_dr_region}.amazonaws.com"
+        docker_url        = "https://${docker_repo}"
+        clusterName       = "loyaltyglobalnora-prod-drCluster" // eks-dev xcijv-dev-eks-cluster-alpha
+        environment       = "prod"     
+        taskFamily        = "loyaltyusers-nora-prod-dr"
+        serviceName       = "loyaltyusers-nora-prod-dr"
+        loyalty_region    = "nora"
+        taskDefile        = "file://task-definition-${dev_version}.json"
+      }
+      steps {
+        script {
+            //input message: 'Do you want to approve the deploy in NORA-PROD-DR?'
+            withAWS(credentials: 'loyalty-dev', region: "${aws_prod_nora_dr_region}") {           
+              
+        sh  " sed -e  's;%BUILD_TAG%;${dev_version};g'  task-definition-input-global-nora-prod-dr.json > task-definition-${environment}.json"
+              
+        sh  " sed -e  's;%BUILD_ENV_VAR%;${environment};g;s;%LOYALTY_REGION_ENV_VAR%;${loyalty_region};g;s;%REGION_ENV_VAR%;${region};g'  task-definition-${environment}.json > task-definition-${dev_version}.json"
+              
+        // Get current [TaskDefinition#revision-number]
+              def currTaskDef = sh (returnStdout: true,script: "aws ecs describe-task-definition  --task-definition ${taskFamily} | egrep 'revision' | tr ',' ' ' | awk '{print \$2}'").trim()
+              // get Current task definition
+                       
+              if(currTaskDef) {
+                    sh  "aws ecs update-service  --cluster ${clusterName}  --service ${serviceName}  --task-definition ${taskFamily}:${currTaskDef} --desired-count 0"
+                }  
+
+              sh  " aws ecs register-task-definition  --family ${taskFamily} --cli-input-json ${taskDefile}"
+              def taskRevision = sh (returnStdout: true,script:  "aws ecs describe-task-definition --task-definition ${taskFamily} | egrep 'revision'   | tr ',' ' ' | awk '{print \$2}' ").trim()
+              // ECS update service to use the newly registered [TaskDefinition#revision]
+              sh  "aws ecs update-service  --cluster ${clusterName} --service ${serviceName} --task-definition ${taskFamily}:${taskRevision}  --desired-count 2 "    
+     }
+        }
+       }
+     }
+
+  }
+    post {
+    always {
+        echo 'cleaning up workspace'
+        deleteDir() /* clean up our workspace */
+            }
+    }	
+  }

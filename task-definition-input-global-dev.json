@@ -1,0 +1,52 @@
+{
+    "containerDefinitions": [ 
+       { 
+          "essential": true,
+          "image": "149216511563.dkr.ecr.us-east-2.amazonaws.com/loyaltyusers:%BUILD_TAG%",
+          "logConfiguration": { 
+             "logDriver": "awslogs",
+             "options": { 
+                "awslogs-group" : "/ecs/loyaltyusers",
+                "awslogs-region": "us-east-2",
+                "awslogs-stream-prefix": "ecs"
+             }
+          },
+          "name": "loyaltyusers",
+          "portMappings": [ 
+             { 
+                "containerPort": 5000,
+                "hostPort": 5000,
+                "protocol": "tcp"
+             }
+          ],
+          "environment": [
+            {
+              "name": "SPRING_PROFILES_ACTIVE",
+              "value": "%BUILD_ENV_VAR%"
+            },
+            {
+              "name": "cloud.aws.region.static",
+              "value": "%REGION_ENV_VAR%"
+            },
+            {
+            	"name": "loyalty.region",
+            	"value": "%LOYALTY_REGION%"
+            }
+            ],
+          "secrets": [{
+            "name": "LaceworkAccessToken",
+            "valueFrom": "arn:aws:ssm:us-east-2:149216511563:parameter/laceworks_token"
+         }] 
+       }
+    ],
+    
+    "cpu": "512",
+    "executionRoleArn": "arn:aws:iam::149216511563:role/ecsTaskExecutionRole",
+    "taskRoleArn": "arn:aws:iam::149216511563:role/ECSrole",
+    "family": "loyaltyusers",
+    "memory": "1024",
+    "networkMode": "awsvpc",
+    "requiresCompatibilities": [ 
+        "FARGATE" 
+     ]
+ }

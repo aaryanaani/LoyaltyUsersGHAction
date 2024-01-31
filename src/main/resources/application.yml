@@ -1,0 +1,27 @@
+spring:
+  profiles:
+    active: prod
+  application:
+    name: loyaltyUsers
+
+server:
+  port: 5000
+  tomcat:
+    accesslog:
+      enabled: true
+    max-threads: 500  
+    
+       
+cloud:
+  aws:
+    stack:
+      auto: false
+             
+
+user_api: '{0}/priv/v1/apps/{1}/users/'
+external_user_api: '{0}/priv/v1/apps/{1}/external/users/'
+offers_api: '{0}/offers/api/2.0/offers'
+search_user_api: '{0}/priv/v1/apps/{1}/users/search?'
+registration_event_api: '{0}/incentives/api/1.0/user_events/trigger_user_event'
+campaign_api: ${external_user_api}{2}/campaigns/{3}/events
+

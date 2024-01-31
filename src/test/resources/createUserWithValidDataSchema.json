@@ -1,0 +1,113 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "status": {
+      "type": "string"
+    },
+    "user": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "external_id": {
+          "type": "null"
+        },
+        "opted_in": {
+          "type": "boolean"
+        },
+        "activated": {
+          "type": "boolean"
+        },
+        "proxy_ids": {
+          "type": "null"
+        },
+        "identifiers": {
+          "type": "null"
+        },
+        "available_points": {
+          "type": "integer"
+        },
+        "test_points": {
+          "type": "integer"
+        },
+        "unclaimed_achievement_count": {
+          "type": "integer"
+        },
+        "email": {
+          "type": "string"
+        },
+        "created_at": {
+          "type": "string"
+        },
+        "updated_at": {
+          "type": "string"
+        },
+        "city": {
+          "type": "null"
+        },
+        "zip": {
+          "type": "null"
+        },
+        "country": {
+          "type": "null"
+        },
+        "suspended": {
+          "type": "boolean"
+        },
+        "last_name": {
+          "type": "null"
+        },
+        "first_name": {
+          "type": "null"
+        },
+        "registered_at": {
+          "type": "string"
+        },
+        "profile_photo_url": {
+          "type": "string"
+        },
+        "test_account": {
+          "type": "boolean"
+        },
+        "account_status": {
+          "type": "string"
+        },
+        "tier": {
+          "type": "string"
+        },
+        "tier_system": {
+          "type": "string"
+        },
+        "tier_points": {
+          "type": "number"
+        },
+        "tier_entered_at": {
+          "type": "string"
+        },
+        "tier_resets_at": {
+          "type": "string"
+        },
+        "maintenance_required_points": {
+          "type": "number"
+        },
+        "maintenance_points": {
+          "type": "number"
+        },
+        "referrer_code": {
+          "type": "string"
+        },
+        "user_profile": {
+          "type": "null"
+        },
+        "auth_token": {
+          "type": "null"
+        },
+        "phone_numbers": {
+          "type": "null"
+        }
+      }
+    }
+  }
+}

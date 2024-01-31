@@ -1,0 +1,150 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "status": {
+      "type": "string"
+    },
+    "user": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "external_id": {
+          "type": "string"
+        },
+        "opted_in": {
+          "type": "boolean"
+        },
+        "activated": {
+          "type": "boolean"
+        },
+        "proxy_ids": {
+          "type": "array",
+          "items": {}
+        },
+        "identifiers": {
+          "type": "array",
+          "items": [
+            {
+              "type": "object",
+              "properties": {
+                "external_id": {
+                  "type": "string"
+                },
+                "external_id_type": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "external_id",
+                "external_id_type"
+              ]
+            },
+            {
+              "type": "object",
+              "properties": {
+                "external_id": {
+                  "type": "string"
+                },
+                "external_id_type": {
+                  "type": "string"
+                }
+              }
+            },
+            {
+              "type": "object",
+              "properties": {
+                "external_id": {
+                  "type": "string"
+                },
+                "external_id_type": {
+                  "type": "string"
+                }
+              }
+            }
+          ]
+        },
+        "available_points": {
+          "type": "number"
+        },
+        "test_points": {
+          "type": "number"
+        },
+        "unclaimed_achievement_count": {
+          "type": "integer"
+        },
+        "email": {
+          "type": "string"
+        },
+        "created_at": {
+          "type": "string"
+        },
+        "updated_at": {
+          "type": "string"
+        },
+        "city": {
+          "type": "string"
+        },
+        "zip": {
+          "type": "string"
+        },
+        "country": {
+          "type": "string"
+        },
+        "locale": {
+          "type": "string"
+        },
+        "suspended": {
+          "type": "boolean"
+        },
+        "last_name": {
+          "type": "string"
+        },
+        "first_name": {
+          "type": "string"
+        },
+        "registered_at": {
+          "type": "string"
+        },
+        "profile_photo_url": {
+          "type": "string"
+        },
+        "test_account": {
+          "type": "boolean"
+        },
+        "account_status": {
+          "type": "string"
+        },
+        "tier": {
+          "type": "string"
+        },
+        "tier_system": {
+          "type": "string"
+        },
+        "tier_points": {
+          "type": "number"
+        },
+        "tier_entered_at": {
+          "type": "string"
+        },
+        "tier_resets_at": {
+          "type": "string"
+        },
+        "maintenance_required_points": {
+          "type": "number"
+        },
+        "maintenance_points": {
+          "type": "number"
+        },
+        "referrer_code": {
+          "type": "string"
+        },
+        "auth_token": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

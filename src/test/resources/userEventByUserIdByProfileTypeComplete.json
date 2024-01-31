@@ -1,0 +1,619 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "user": {
+      "type": "object",
+      "properties": {
+        "country": {
+          "type": "string"
+        },
+        "proxy_ids": {
+          "type": "array",
+          "items": {}
+        },
+        "unclaimed_achievement_count": {
+          "type": "number"
+        },
+        "tier_points": {
+          "type": "number"
+        },
+        "tier_details": {
+          "type": "object",
+          "properties": {
+            "point_account_balances": {
+              "type": "object",
+              "properties": {
+                "summary": {
+                  "type": "object",
+                  "properties": {
+                    "total_points": {
+                      "type": "number"
+                    },
+                    "life_time_points": {
+                      "type": "number"
+                    }
+                  }
+                },
+                "user_id": {
+                  "type": "string"
+                },
+                "retailer_id": {
+                  "type": "string"
+                },
+                "details": {
+                  "type": "array",
+                  "items": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "account_name": {
+                          "type": "string"
+                        },
+                        "user_point_account_id": {
+                          "type": "string"
+                        },
+                        "point_account_id": {
+                          "type": "string"
+                        },
+                        "life_time_value": {
+                          "type": "number"
+                        },
+                        "grouping_label": {
+                          "type": "string"
+                        },
+                        "available_balance": {
+                          "type": "number"
+                        }
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "account_name": {
+                          "type": "string"
+                        },
+                        "user_point_account_id": {
+                          "type": "string"
+                        },
+                        "point_account_id": {
+                          "type": "string"
+                        },
+                        "life_time_value": {
+                          "type": "number"
+                        },
+                        "grouping_label": {
+                          "type": "string"
+                        },
+                        "available_balance": {
+                          "type": "number"
+                        }
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "account_name": {
+                          "type": "string"
+                        },
+                        "user_point_account_id": {
+                          "type": "string"
+                        },
+                        "point_account_id": {
+                          "type": "string"
+                        },
+                        "life_time_value": {
+                          "type": "number"
+                        },
+                        "grouping_label": {
+                          "type": "string"
+                        },
+                        "available_balance": {
+                          "type": "number"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            },
+            "tier_levels": {
+              "type": "array",
+              "items": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "tier_level_id": {
+                      "type": "string"
+                    },
+                    "user_id": {
+                      "type": "string"
+                    },
+                    "tier_system_id": {
+                      "type": "string"
+                    },
+                    "join_date": {
+                      "type": "string"
+                    },
+                    "last_maintenance_eval_date": {
+                      "type": "string"
+                    },
+                    "id": {
+                      "type": "string"
+                    },
+                    "next_tier_overview": {
+                      "type": "object",
+                      "properties": {
+                        "tier_system_id": {
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "retailer_id": {
+                          "type": "string"
+                        },
+                        "rank": {
+                          "type": "number"
+                        },
+                        "id": {
+                          "type": "string"
+                        },
+                        "status": {
+                          "type": "number"
+                        }
+                      }
+                    },
+                    "tier_overview": {
+                      "type": "object",
+                      "properties": {
+                        "tier_system_id": {
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "retailer_id": {
+                          "type": "string"
+                        },
+                        "rank": {
+                          "type": "number"
+                        },
+                        "id": {
+                          "type": "string"
+                        },
+                        "status": {
+                          "type": "number"
+                        }
+                      }
+                    },
+                    "tier_progress": {
+                      "type": "array",
+                      "items": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "rules": {
+                              "type": "array",
+                              "items": [
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "rule_id": {
+                                      "type": "string"
+                                    },
+                                    "rule_tree_name": {
+                                      "type": "string"
+                                    },
+                                    "tree_id": {
+                                      "type": "string"
+                                    },
+                                    "parent_id": {
+                                      "type": "string"
+                                    },
+                                    "rule": {
+                                      "type": "object",
+                                      "properties": {
+                                        "comparison": {
+                                          "type": "number"
+                                        },
+                                        "is_new": {
+                                          "type": "boolean"
+                                        },
+                                        "parent_id": {
+                                          "type": "string"
+                                        },
+                                        "count_of_events": {
+                                          "type": "number"
+                                        },
+                                        "retailer_id": {
+                                          "type": "string"
+                                        },
+                                        "rank": {
+                                          "type": "number"
+                                        },
+                                        "id": {
+                                          "type": "string"
+                                        },
+                                        "constraints": {
+                                          "type": "array",
+                                          "items": {}
+                                        },
+                                        "event_symbol": {
+                                          "type": "string"
+                                        },
+                                        "discriminator": {
+                                          "type": "number"
+                                        }
+                                      }
+                                    },
+                                    "query_result": {
+                                      "type": "number"
+                                    },
+                                    "rule_passed": {
+                                      "type": "boolean"
+                                    },
+                                    "discriminator": {
+                                      "type": "number"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "rule_id": {
+                                      "type": "string"
+                                    },
+                                    "rule_tree_name": {
+                                      "type": "string"
+                                    },
+                                    "tree_id": {
+                                      "type": "string"
+                                    },
+                                    "parent_id": {
+                                      "type": "string"
+                                    },
+                                    "rule": {
+                                      "type": "object",
+                                      "properties": {
+                                        "comparison": {
+                                          "type": "number"
+                                        },
+                                        "is_new": {
+                                          "type": "boolean"
+                                        },
+                                        "parent_id": {
+                                          "type": "string"
+                                        },
+                                        "total_points": {
+                                          "type": "number"
+                                        },
+                                        "retailer_id": {
+                                          "type": "string"
+                                        },
+                                        "rank": {
+                                          "type": "number"
+                                        },
+                                        "id": {
+                                          "type": "string"
+                                        },
+                                        "constraints": {
+                                          "type": "array",
+                                          "items": [
+                                            {
+                                              "type": "object",
+                                              "properties": {
+                                                "rule_id": {
+                                                  "type": "string"
+                                                },
+                                                "is_new": {
+                                                  "type": "boolean"
+                                                },
+                                                "point_accounts": {
+                                                  "type": "object",
+                                                  "properties": {
+                                                    "ad400b67-3fe4-43ff-a946-083ebe49de26": {
+                                                      "type": "string"
+                                                    }
+                                                  }
+                                                },
+                                                "rank": {
+                                                  "type": "number"
+                                                },
+                                                "id": {
+                                                  "type": "string"
+                                                },
+                                                "version": {
+                                                  "type": "number"
+                                                },
+                                                "discriminator": {
+                                                  "type": "number"
+                                                }
+                                              }
+                                            }
+                                          ]
+                                        },
+                                        "discriminator": {
+                                          "type": "number"
+                                        }
+                                      }
+                                    },
+                                    "query_result": {
+                                      "type": "number"
+                                    },
+                                    "rule_passed": {
+                                      "type": "boolean"
+                                    },
+                                    "discriminator": {
+                                      "type": "number"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "rule_id": {
+                                      "type": "string"
+                                    },
+                                    "rule_tree_name": {
+                                      "type": "string"
+                                    },
+                                    "tree_id": {
+                                      "type": "string"
+                                    },
+                                    "rule": {
+                                      "type": "object",
+                                      "properties": {
+                                        "is_new": {
+                                          "type": "boolean"
+                                        },
+                                        "retailer_id": {
+                                          "type": "string"
+                                        },
+                                        "rank": {
+                                          "type": "number"
+                                        },
+                                        "id": {
+                                          "type": "string"
+                                        },
+                                        "constraints": {
+                                          "type": "array",
+                                          "items": {}
+                                        },
+                                        "discriminator": {
+                                          "type": "number"
+                                        }
+                                      }
+                                    },
+                                    "rule_passed": {
+                                      "type": "boolean"
+                                    },
+                                    "discriminator": {
+                                      "type": "number"
+                                    }
+                                  }
+                                }
+                              ]
+                            },
+                            "rule_tree_id": {
+                              "type": "string"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "tier_level_id": {
+                      "type": "string"
+                    },
+                    "user_id": {
+                      "type": "string"
+                    },
+                    "tier_system_id": {
+                      "type": "string"
+                    },
+                    "join_date": {
+                      "type": "string"
+                    },
+                    "last_maintenance_eval_date": {
+                      "type": "string"
+                    },
+                    "id": {
+                      "type": "string"
+                    },
+                    "next_tier_overview": {
+                      "type": "object",
+                      "properties": {
+                        "tier_system_id": {
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "retailer_id": {
+                          "type": "string"
+                        },
+                        "rank": {
+                          "type": "number"
+                        },
+                        "id": {
+                          "type": "string"
+                        },
+                        "status": {
+                          "type": "number"
+                        }
+                      }
+                    },
+                    "tier_overview": {
+                      "type": "object",
+                      "properties": {
+                        "tier_system_id": {
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "retailer_id": {
+                          "type": "string"
+                        },
+                        "rank": {
+                          "type": "number"
+                        },
+                        "id": {
+                          "type": "string"
+                        },
+                        "status": {
+                          "type": "number"
+                        }
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        "referrer_code": {
+          "type": "string"
+        },
+        "gender": {
+          "type": "string"
+        },
+        "city": {
+          "type": "string"
+        },
+        "created_at": {
+          "type": "string"
+        },
+        "external_id": {
+          "type": "string"
+        },
+        "account_status": {
+          "type": "string"
+        },
+        "user_profile": {
+          "type": "object"
+        },
+        "test_points": {
+          "type": "number"
+        },
+        "updated_at": {
+          "type": "string"
+        },
+        "tier": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "state": {
+          "type": "string"
+        },
+        "test_account": {
+          "type": "boolean"
+        },
+        "first_name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "zip": {
+          "type": "string"
+        },
+        "profile_photo_url": {
+          "type": "string"
+        },
+        "registered_at": {
+          "type": "string"
+        },
+        "identifiers": {
+          "type": "array",
+          "items": [
+            {
+              "type": "object",
+              "properties": {
+                "external_id_type": {
+                  "type": "null"
+                },
+                "external_id": {
+                  "type": "string"
+                }
+              }
+            }
+          ]
+        },
+        "last_name": {
+          "type": "string"
+        },
+        "tier_resets_at": {
+          "type": "string"
+        },
+        "tier_entered_at": {
+          "type": "string"
+        },
+        "available_points": {
+          "type": "number"
+        },
+        "suspended": {
+          "type": "boolean"
+        },
+        "phone_numbers": {
+          "type": "array",
+          "items": [
+            {
+              "type": "object",
+              "properties": {
+                "phone_type": {
+                  "type": "string"
+                },
+                "verified_ownership": {
+                  "type": "boolean"
+                },
+                "preference_flags": {
+                  "type": "array",
+                  "items": [
+                    {
+                      "type": "string"
+                    }
+                  ]
+                },
+                "phone_number": {
+                  "type": "string"
+                }
+              }
+            }
+          ]
+        },
+        "dob": {
+          "type": "string"
+        },
+        "next_tier_points": {
+          "type": "number"
+        },
+        "dma": {
+          "type": "string"
+        },
+        "tier_ends_value": {
+          "type": "number"
+        },
+        "opted_in": {
+          "type": "boolean"
+        },
+        "tier_system": {
+          "type": "string"
+        },
+        "activated": {
+          "type": "boolean"
+        }
+      }
+    },
+    "status": {
+      "type": "string"
+    }
+  }
+}

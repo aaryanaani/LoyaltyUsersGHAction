@@ -1,0 +1,53 @@
+{
+    "containerDefinitions": [ 
+       { 
+          "essential": true,
+          "image": "252850564008.dkr.ecr.eu-west-1.amazonaws.com/loyaltyusers:%BUILD_TAG%",
+          "logConfiguration": { 
+             "logDriver": "awslogs",
+             "options": { 
+                "awslogs-group" : "/ecs/loyaltyusers-emea-prod",
+                "awslogs-region": "eu-west-1",
+                "awslogs-stream-prefix": "ecs"
+             }
+          },
+          "name": "loyaltyusers-emea-prod",
+          "portMappings": [ 
+             { 
+                "containerPort": 5000,
+                "hostPort": 5000,
+                "protocol": "tcp"
+             }
+          ],
+          "environment": [
+            {
+              "name": "SPRING_PROFILES_ACTIVE",
+              "value": "%BUILD_ENV_VAR%"
+            },
+            {
+              "name": "cloud.aws.region.static",
+              "value": "%REGION_ENV_VAR%"
+            },
+            {
+            	"name": "loyalty.region",
+            	"value": "%LOYALTY_REGION_ENV_VAR%"
+            }
+            ],
+          "secrets": [{
+            "name": "LaceworkAccessToken",
+            "valueFrom": "arn:aws:ssm:us-east-2:252850564008:parameter/laceworks_token"           
+         }]         
+       }
+    ],
+    "cpu": "512",
+    "executionRoleArn": "arn:aws:iam::252850564008:role/ecsTaskExecutionRole",
+    "taskRoleArn": "arn:aws:iam::252850564008:role/ECSrole",
+    "family": "loyaltyusers-emea-prod",
+    "memory": "1024",
+    "networkMode": "awsvpc",
+    "requiresCompatibilities": [ 
+        "FARGATE" 
+     ]
+ }
+ 
+ 

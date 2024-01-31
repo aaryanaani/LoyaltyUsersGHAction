@@ -1,0 +1,116 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "user": {
+      "type": "object",
+      "properties": {
+        "proxy_ids": {
+          "type": "array",
+          "items": {}
+        },
+        "unclaimed_achievement_count": {
+          "type": "number"
+        },
+        "tier_points": {
+          "type": "number"
+        },
+        "referrer_code": {
+          "type": "string"
+        },
+        "created_at": {
+          "type": "string"
+        },
+        "external_id": {
+          "type": "string"
+        },
+        "account_status": {
+          "type": "string"
+        },
+        "test_points": {
+          "type": "number"
+        },
+        "updated_at": {
+          "type": "string"
+        },
+        "tier": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "test_account": {
+          "type": "boolean"
+        },
+        "first_name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "profile_photo_url": {
+          "type": "string"
+        },
+        "maintenance_required_points": {
+          "type": "number"
+        },
+        "registered_at": {
+          "type": "string"
+        },
+        "last_name": {
+          "type": "string"
+        },
+        "tier_resets_at": {
+          "type": "string"
+        },
+        "tier_entered_at": {
+          "type": "string"
+        },
+        "available_points": {
+          "type": "number"
+        },
+        "suspended": {
+          "type": "boolean"
+        },
+        "phone_numbers": {
+          "type": "array",
+          "items": [
+            {
+              "type": "object",
+              "properties": {
+                "phone_type": {
+                  "type": "string"
+                },
+                "verified_ownership": {
+                  "type": "boolean"
+                },
+                "preference_flags": {
+                  "type": "array",
+                  "items": {}
+                },
+                "phone_number": {
+                  "type": "string"
+                }
+              }
+            }
+          ]
+        },
+        "maintenance_points": {
+          "type": "number"
+        },
+        "opted_in": {
+          "type": "boolean"
+        },
+        "tier_system": {
+          "type": "string"
+        },
+        "activated": {
+          "type": "boolean"
+        }
+      }
+    },
+    "status": {
+      "type": "string"
+    }
+  }
+}
