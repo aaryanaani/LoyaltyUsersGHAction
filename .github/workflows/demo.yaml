@@ -33,14 +33,14 @@ jobs:
       - name: Set up Java
         uses: actions/setup-java@v4
         with:
-          distribution: 'corretto'
+          distribution: 'temurin'
           java-version: '17'
 
-      # - name: Build and Scan
-      #   run: |
-      #     chmod +x gradlew
-      #     ./gradlew -Plabel=${{ github.sha }} clean labelBuild build
-      #     #junit allowEmptyResults: true, testResults: '**/build/test-results/**/TEST-*'
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
+        
+      - name: Build with Gradle
+        run: ./gradlew -Plabel=${{ steps.read_from_file.outputs.version }} clean labelBuild build
 
   deploy_dev:
     environment: develop
