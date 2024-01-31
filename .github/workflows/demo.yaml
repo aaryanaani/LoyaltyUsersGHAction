@@ -36,7 +36,7 @@ jobs:
     env: 
       build_id: test
 
-  steps:
+    steps:
       - name: Get Repo
         uses: actions/checkout@v4
 
