@@ -32,10 +32,6 @@ jobs:
       id-token: write
       contents: read
 
-    environment: develop
-    env: 
-      build_id: test
-
     steps:
       - name: Get Repo
         uses: actions/checkout@v4
