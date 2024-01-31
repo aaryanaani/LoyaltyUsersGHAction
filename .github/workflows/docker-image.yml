@@ -55,6 +55,8 @@ jobs:
 
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2
+      - name: Make gradlew executable      
+        run: chmod +x ./gradlew
         
       - name: Build with Gradle
         run: ./gradlew -Plabel=${{ steps.read_from_file.outputs.version }} clean labelBuild build
