@@ -1,12 +1,10 @@
-name: GitHub Actions
+name: Build and Deploy
+
 on:
-  workflow_dispatch:
   push:
     branches:
-      - demo
+      - test
 
-  pull_request:
-    types: [ opened, synchronize, reopened ]
 env:
   SERVICE_NAME: loyaltyusers
   DOCKER_CONTEXT: ${{ github.workspace }}
@@ -26,99 +24,49 @@ env:
 
 jobs:
   build:
-    runs-on: self-hosted
-    # Necessary for Sonar to report back the the PR
-    permissions:
-      id-token: write
-      contents: read
-
-    environment: develop
-    env: 
-      build_id: test
+    runs-on: ubuntu-latest
 
     steps:
-      - name: Get Repo
-        uses: actions/checkout@v4
+      - name: Checkout Repository
+        uses: actions/checkout@v2
 
-      - name: Set up JDK 17
-        id: java
+      - name: Set up Java
         uses: actions/setup-java@v4
         with:
-          distribution: 'temurin' 
+          distribution: 'corretto'
           java-version: '17'
-        
-      - name: Current Directory
+
+      - name: Build and Scan
         run: |
-          pwd
+          chmod +x gradlew
+          ./gradlew -Plabel=${{ github.sha }} clean labelBuild build
+          #junit allowEmptyResults: true, testResults: '**/build/test-results/**/TEST-*'
 
-      - name: Install Cert
+  deploy_dev:
+    environment: develop
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Set up AWS CLI
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - name: Clean up
+        run:  |
+          docker container prune --force
+          docker image prune --force
+          docker volume prune --force
+
+      - name:  AWS ECR Login
         run: |
-          ls -lrt ./
-          curl https://172.21.102.104/sonarqube/batch/index --cacert ./sonarqube.skechers.com.cer
-          keytool -import -noprompt -trustcacerts -file ./sonarqube.skechers.com.cer -keystore ${{ steps.java.outputs.path }}/lib/security/cacerts -storepass  'changeit' || true
-        env:
-          MY_ENV_VAR: ${{ vars.SONAR_ROOT_CERT }}
+          echo "${{ secrets.AWS_ACCESS_KEY_ID }}" | docker login --username AWS --password-stdin "${{ vars.AWS_ACCOUNT }}.dkr.ecr.us-east-2.amazonaws.com"
 
-      - id: read_from_file
-        name: Read version from file
-        run: | 
-          version=$(cat version.txt)
-          echo "version=$version" >> $GITHUB_OUTPUT
 
-      # - name: Output version from file
-      #  run: |
-      #    echo "version is ${{ steps.read_from_file.outputs.version }}"
-
-      - name: Setup Gradle
-        uses: gradle/gradle-build-action@v2
-        
-      - name: Build with Gradle
-        run: ./gradlew -Plabel=${{ steps.read_from_file.outputs.version }} clean labelBuild build
-
-      - name: Build and analyze
-        env:
-          GITHUB_TOKEN: ${{ secrets.TOKEN_GITHUB }}  # Needed to get PR information, if any
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-          SONAR_ROOT_CERT: ${{ secrets.SONAR_ROOT_CERT }}
-        run: ./gradlew build sonar -Dsonar.gradle.skipCompile=true -Dsonar.verbose=true --info
-        # --stacktrace --scan --debug
-
-      - name: Download ShiftLeft CLI
+      - name: Create Image and Push to ECR
         run: |
-         curl https://cdn.shiftleft.io/download/sl > ${GITHUB_WORKSPACE}/sl && chmod a+rx ${GITHUB_WORKSPACE}/sl
-
-      - name: Validate Build Rules For PRs
-        if: github.event.pull_request
-        run: |
-         ${GITHUB_WORKSPACE}/sl check-analysis --v2 \
-           --target "tag.branch=${{ github.head_ref || github.ref }}" \
-           --github-pr-number=${{ github.event.number }} \
-           --github-pr-user=${{ github.repository_owner }} \
-           --github-pr-repo=${{ github.event.repository.name }} \
-           --github-token=${{ secrets.GITHUB_TOKEN }}
-        env:
-         SHIFTLEFT_ACCESS_TOKEN: ${{ secrets.SHIFTLEFT_ACCESS_TOKEN }}
-
-    #Dont run this if we are in the pull request context
-      - name: Validate Build Rules For Branches
-        if: ${{ !github.event.pull_request }}
-        run: |
-         ${GITHUB_WORKSPACE}/sl check-analysis --v2 \
-           --config shiftleft.yaml \
-           --github-token=${{ secrets.GITHUB_TOKEN }}
-        env:
-         SHIFTLEFT_ACCESS_TOKEN: ${{ secrets.SHIFTLEFT_ACCESS_TOKEN }}
-      deploy_dev:
-        environment: develop
-        runs-on: ubuntu-latest
-        needs: build
-        steps:
-          - name: Set up AWS CLI
-            uses: aws-actions/configure-aws-credentials@v4
-            with:
-              aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-              aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-              aws-region: ${{ vars.AWS_REGION }}
-
-              #
+          docker build --rm --pull --no-cache -t ${{ env.SERVICE_NAME }} ${{ env.DOCKER_CONTEXT }}
+          docker tag ${{ env.SERVICE_NAME }}:latest ${{ env.DOCKER_REPO }}/${{ env.SERVICE_NAME }}:${{ env.DEV_VERSION }}
+          docker push ${{ env.DOCKER_REPO }}/${{ env.SERVICE_NAME }}:${{ env.DEV_VERSION }}
