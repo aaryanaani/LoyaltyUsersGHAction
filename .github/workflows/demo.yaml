@@ -3,7 +3,7 @@ name: Build and Deploy
 on:
   push:
     branches:
-      - test
+      - demo
 
 env:
   SERVICE_NAME: loyaltyusers
