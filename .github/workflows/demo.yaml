@@ -36,11 +36,11 @@ jobs:
           distribution: 'corretto'
           java-version: '17'
 
-      - name: Build and Scan
-        run: |
-          chmod +x gradlew
-          ./gradlew -Plabel=${{ github.sha }} clean labelBuild build
-          #junit allowEmptyResults: true, testResults: '**/build/test-results/**/TEST-*'
+      # - name: Build and Scan
+      #   run: |
+      #     chmod +x gradlew
+      #     ./gradlew -Plabel=${{ github.sha }} clean labelBuild build
+      #     #junit allowEmptyResults: true, testResults: '**/build/test-results/**/TEST-*'
 
   deploy_dev:
     environment: develop
@@ -54,19 +54,19 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ vars.AWS_REGION }}
 
-      - name: Clean up
-        run:  |
-          docker container prune --force
-          docker image prune --force
-          docker volume prune --force
+      # - name: Clean up
+      #   run:  |
+      #     docker container prune --force
+      #     docker image prune --force
+      #     docker volume prune --force
 
-      - name:  AWS ECR Login
-        run: |
-          echo "${{ secrets.AWS_ACCESS_KEY_ID }}" | docker login --username AWS --password-stdin "${{ vars.AWS_ACCOUNT }}.dkr.ecr.us-east-2.amazonaws.com"
+      # - name:  AWS ECR Login
+      #   run: |
+      #     echo "${{ secrets.AWS_ACCESS_KEY_ID }}" | docker login --username AWS --password-stdin "${{ vars.AWS_ACCOUNT }}.dkr.ecr.us-east-2.amazonaws.com"
 
 
-      - name: Create Image and Push to ECR
-        run: |
-          docker build --rm --pull --no-cache -t ${{ env.SERVICE_NAME }} ${{ env.DOCKER_CONTEXT }}
-          docker tag ${{ env.SERVICE_NAME }}:latest ${{ env.DOCKER_REPO }}/${{ env.SERVICE_NAME }}:${{ env.DEV_VERSION }}
-          docker push ${{ env.DOCKER_REPO }}/${{ env.SERVICE_NAME }}:${{ env.DEV_VERSION }}
+      # - name: Create Image and Push to ECR
+      #   run: |
+      #     docker build --rm --pull --no-cache -t ${{ env.SERVICE_NAME }} ${{ env.DOCKER_CONTEXT }}
+      #     docker tag ${{ env.SERVICE_NAME }}:latest ${{ env.DOCKER_REPO }}/${{ env.SERVICE_NAME }}:${{ env.DEV_VERSION }}
+      #     docker push ${{ env.DOCKER_REPO }}/${{ env.SERVICE_NAME }}:${{ env.DEV_VERSION }}
